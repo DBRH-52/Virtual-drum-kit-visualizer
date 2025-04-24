@@ -19,12 +19,9 @@
     </div>
     <pre id="midi-log">Waiting for MIDI input...</pre>
     <script>
-      // Check if Web MIDI is supported
       if (navigator.requestMIDIAccess) {
-        console.log('Web MIDI is supported');
         navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
       } else {
-        console.log('Web MIDI is not supported');
         document.getElementById('midi-log').textContent = 'Web MIDI is not supported in this browser.';
       }
 
@@ -43,48 +40,31 @@
       };
 
       function onMIDISuccess(midiAccess) {
-        console.log('MIDI Access granted');
         const inputs = midiAccess.inputs.values();
-        let inputFound = false;
-        
         for (let input of inputs) {
-          console.log('Found MIDI input:', input.name);
-          inputFound = true;
           document.getElementById('midi-log').textContent += '\nConnected to: ' + input.name;
           input.onmidimessage = handleMIDIMessage;
         }
-        
-        if (!inputFound) {
-          console.log('No MIDI inputs found');
-          document.getElementById('midi-log').textContent += '\nNo MIDI inputs found';
-        }
       }
 
-      function onMIDIFailure(error) {
-        console.log('Failed to connect to MIDI devices:', error);
-        document.getElementById('midi-log').textContent = 'Failed to connect to MIDI devices: ' + error;
+      function onMIDIFailure() {
+        document.getElementById('midi-log').textContent = 'Failed to connect to MIDI devices.';
       }
 
       function handleMIDIMessage(message) {
         const [command, note, velocity] = message.data;
-        console.log('MIDI Message received:', { command, note, velocity });
+        document.getElementById('midi-log').textContent += `\nMIDI Message: Command=${command}, Note=${note}, Velocity=${velocity}`;
         
-        // Only process note-on messages (144) with velocity > 0
-        if (command === 144 && velocity > 0) {
-          console.log('Processing drum hit:', DRUM_MAPPING[note]);
+        // Process note-on messages (153) with velocity > 0
+        if (command === 153 && velocity > 0) {
           const drumElement = document.getElementById(DRUM_MAPPING[note]);
           if (drumElement) {
-            console.log('Found drum element, updating visual');
             // Visual feedback
             drumElement.style.backgroundColor = 'red';
             setTimeout(() => {
               drumElement.style.backgroundColor = '';
             }, 100);
-          } else {
-            console.log('No drum element found for note:', note);
           }
-          
-          document.getElementById('midi-log').textContent += `\nDrum: ${DRUM_MAPPING[note]}, Velocity: ${velocity}`;
         }
       }
     </script>
