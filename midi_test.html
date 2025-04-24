@@ -53,9 +53,10 @@
 
       function handleMIDIMessage(message) {
         const [command, note, velocity] = message.data;
+        document.getElementById('midi-log').textContent += `\nMIDI Message: Command=${command}, Note=${note}, Velocity=${velocity}`;
         
-        // Only process note-on messages (144) with velocity > 0
-        if (command === 144 && velocity > 0) {
+        // Process note-on messages (153) with velocity > 0
+        if (command === 153 && velocity > 0) {
           const drumElement = document.getElementById(DRUM_MAPPING[note]);
           if (drumElement) {
             // Visual feedback
@@ -64,8 +65,6 @@
               drumElement.style.backgroundColor = '';
             }, 100);
           }
-          
-          document.getElementById('midi-log').textContent += `\nDrum: ${DRUM_MAPPING[note]}, Velocity: ${velocity}`;
         }
       }
     </script>
