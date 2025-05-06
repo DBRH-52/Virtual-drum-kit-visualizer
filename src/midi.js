@@ -51,8 +51,20 @@ function handleMIDIMessage(message) {
         document.getElementById('midi-log').textContent += `\nTrying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`;
         if (drumElement) {
             // Visual feedback
-            drumElement.style.backgroundColor = 'red';
+            // Calculate the zoom scale based on velocity (0-quite | 127-loud))
+            // Scaling: 1.0 (velocity=0 - very quiet) - 1.5 (velocity=127 - very loud)
+            // 1.0 - 100% size | 1.5 - 150% size
+                // velocity / 127 -> calculate % of hit
+                // * 0.5 -> max zoom = 50%
+                // 1 + -> size - always at least 100%
+            const scale = 1 + (velocity / 127) * 0.5;
+            // W/o changing the layout
+            drumElement.style.transform = `scale(${scale})`;
+            drumElement.style.backgroundColor = 'orange';
+
+            // Return to previous state after 100ms
             setTimeout(() => {
+                drumElement.style.transform = 'scale(1)';
                 drumElement.style.backgroundColor = '';
             }, 100);
         }
