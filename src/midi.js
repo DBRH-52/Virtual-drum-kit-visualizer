@@ -30,16 +30,15 @@ function onMIDIFailure() {
 // Handle incoming MIDI messages
 function handleMIDIMessage(message) {
     // (MIDI message = 3 bytes)
-    // first byte - command -- 144=note on/128=note off, control change + channel number
-    // second byte - note number -- 0-127
-    // third byte - velocity -- how hard the note is hit - 0-127
+    // (first byte - command -- 144=note on/128=note off, control change + channel number)
+    // (second byte - note number -- 0-127)
+    // (third byte - velocity -- how hard the note is hit - 0-127)
     const [command, note, velocity] = message.data;
     document.getElementById('midi-log').textContent += `\nMIDI Message: Command=${command}, Note=${note}, Velocity=${velocity}`;
-    // Process note-on messages 
-    // (153 = 0x99hex - note on -> 153 = 144 (base note-on) + 9 (channel 10)) 
-    // With velocity > 0 
-    // (0 - note-off msg)
-    if (command === 153 && velocity > 0) {
+    // Process note-on messages
+    // (153 (0x99 hex) = 144 (0x90 hex) + 9 (channel 10)) --> (153 = note-on on channel 10)
+    // With velocity > 0 --> (0 - note-off msg)
+    if ((command & 0xF0) === 0x90 && velocity > 0) {
         const drumElement = document.getElementById(DRUM_MAPPING[note]);
         if (drumElement) {
             // Visual feedback
