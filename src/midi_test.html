@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Drum Visualizer</title>
+    <link rel="stylesheet" href="style.css"
+  </head>
+  <body>
+    <h1>Drum Visualizer</h1>
+    <div id="drum-container">
+      <div class="drum" id="kick">Kick</div>
+      <div class="drum" id="hihat">Hi-Hat</div>
+      <div class="drum" id="snare">Snare</div>
+      <div class="drum" id="tom1">Tom 1</div>
+      <div class="drum" id="tom2">Tom 2</div>
+      <div class="drum" id="tom3">Tom 3</div>
+      <div class="drum" id="tom4">Tom 4</div>
+      <div class="drum" id="crash1">Crash 1</div>
+      <div class="drum" id="crash2">Crash 2</div>
+      <div class="drum" id="ride">Ride</div>
+    </div>
+    <pre id="midi-log">Waiting for MIDI input...</pre>
+    <script>
+      if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+      } else {
+        document.getElementById('midi-log').textContent = 'Web MIDI is not supported in this browser.';
+      }
+
+      // MIDI note mapping for BlackHawk drum HXD 4 Pro
+      const DRUM_MAPPING = {
+        36: 'kick',    
+        42: 'hihat',   
+        38: 'snare',   
+        45: 'tom1',    
+        47: 'tom2',    
+        48: 'tom3',    
+        50: 'tom4',    
+        49: 'crash1',  
+        57: 'crash2',  
+        51: 'ride'     
+      };
+
+      function onMIDISuccess(midiAccess) {
+        const inputs = midiAccess.inputs.values();
+        for (let input of inputs) {
+          document.getElementById('midi-log').textContent += '\nConnected to: ' + input.name;
+          input.onmidimessage = handleMIDIMessage;
+        }
+      }
+
+      function onMIDIFailure() {
+        document.getElementById('midi-log').textContent = 'Failed to connect to MIDI devices.';
+      }
+
+      function handleMIDIMessage(message) {
+        const [command, note, velocity] = message.data;
+        document.getElementById('midi-log').textContent += `\nMIDI Message: Command=${command}, Note=${note}, Velocity=${velocity}`;
+        
+        // Process note-on messages 
+        // (153 = 0x99hex - note on -> 153 = 144 (base note-on) + 9 (channel 10)) 
+        // With velocity > 0 
+        // (0 - note-off msg; in MIDI velocity is between 0 and 127 = how hard the note is hit)
+        if (command === 153 && velocity > 0) {
+          const drumElement = document.getElementById(DRUM_MAPPING[note]);
+          if (drumElement) {
+            // Visual feedback
+            drumElement.style.backgroundColor = 'red';
+            setTimeout(() => {
+              drumElement.style.backgroundColor = '';
+            }, 100);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
