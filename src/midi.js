@@ -40,7 +40,11 @@ function handleMIDIMessage(message) {
     // Process note-on messages
     // (153 (0x99 hex) = 144 (0x90 hex) + 9 (channel 10)) --> (153 = note-on on channel 10)
     // With velocity > 0 --> (0 - note-off msg)
-    if ((command === 144 || command === 153) && velocity > 0) {
+    //if ((command === 144 || command === 153) && velocity > 0) {
+
+    // (0x90 = 1001 0000 in binary - first 4 bits - 1001 - note-on)
+    // (0xF0 = 1111 0000 in binary - mask to check only first 4 bits)
+    if ((command & 0xF0) === 0x90 && velocity > 0) {
         const drumElement = document.getElementById(DRUM_MAPPING[note]);
         const drumName = DRUM_MAPPING[note] || 'unknown';
         console.log(`Trying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`);
