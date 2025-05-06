@@ -2,7 +2,7 @@
 // (standard general MIDI drum note numbers)
 const DRUM_MAPPING = {
     36: 'kick',    
-    42: 'hihat',   
+    46: 'hihat',   
     38: 'snare',   
     45: 'tom1',    
     47: 'tom2',    
@@ -29,17 +29,22 @@ function onMIDIFailure() {
 
 // Handle incoming MIDI messages
 function handleMIDIMessage(message) {
+    console.log("MIDI message received!"); 
     // (MIDI message = 3 bytes)
     // (first byte - command -- 144=note on/128=note off, control change + channel number)
     // (second byte - note number -- 0-127)
     // (third byte - velocity -- how hard the note is hit - 0-127)
     const [command, note, velocity] = message.data;
+    console.log("MIDI data:", command, note, velocity);  // Log the raw data
     document.getElementById('midi-log').textContent += `\nMIDI Message: Command=${command}, Note=${note}, Velocity=${velocity}`;
     // Process note-on messages
     // (153 (0x99 hex) = 144 (0x90 hex) + 9 (channel 10)) --> (153 = note-on on channel 10)
     // With velocity > 0 --> (0 - note-off msg)
-    if ((command & 0xF0) === 0x90 && velocity > 0) {
+    if ((command === 144 || command === 153) && velocity > 0) {
         const drumElement = document.getElementById(DRUM_MAPPING[note]);
+        const drumName = DRUM_MAPPING[note] || 'unknown';
+        console.log(`Trying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`);
+        document.getElementById('midi-log').textContent += `\nTrying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`;
         if (drumElement) {
             // Visual feedback
             drumElement.style.backgroundColor = 'red';
