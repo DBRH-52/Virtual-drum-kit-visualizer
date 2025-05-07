@@ -6,6 +6,19 @@
   </head>
   <body>
     <h1>Drum Visualizer</h1>
+
+    <button id="show-drums-toggle-button">BlackHawk 4 HXD PRO</button>
+    <!-- Hidden div with the BlackHawk drum kit image -->
+    <div id="drum-image-container" style="display: none;">
+      <img src="images/blackhawk.jpg" usemap="#drum-map" id="drum-kit"/>
+      <map name="drum-map">
+        <!-- Define clickable areas of each drum pad on the pic -->
+        <area shape="circle" coords="150,200,40" href="#" alt="kick" id="kick"/>
+        <area shape="circle" coords="250,220,40" href="#" alt="snare" id="snare"/>
+        <area shape="circle" coords="350,180,30" href="#" alt="hihat" id="hihat"/>
+      </map>
+    </div>
+
     <div id="drum-container">
       <div class="drum" id="kick">Kick</div>
       <div class="drum" id="hihat">Hi-Hat</div>
@@ -18,7 +31,9 @@
       <div class="drum" id="crash2">Crash 2</div>
       <div class="drum" id="ride">Ride</div>
     </div>
+
     <pre id="midi-log">Waiting for MIDI input...</pre>
     <script src="src/midi.js"></script>
+    <script src="src/blackhawk4hxdpro.js"></script>
   </body>
 </html> 
