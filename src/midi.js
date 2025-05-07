@@ -13,6 +13,15 @@ const DRUM_MAPPING = {
     51: 'ride'     
 };
 
+export function initializeMIDI() {
+    if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then(onMIDISuccess,onMIDIFailure);
+    }
+    else {
+        document.getElementById('midi-log').textContent = "Web MIDI is not supported in this browser!";
+    }
+}
+
 // Loop through all available MIDI input devices
 function onMIDISuccess(midiAccess) {
     const inputs = midiAccess.inputs.values();
@@ -70,10 +79,3 @@ function handleMIDIMessage(message) {
         }
     }
 }
-
-// Initialize MIDI access
-if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-} else {
-    document.getElementById('midi-log').textContent = 'Web MIDI is not supported in this browser.';
-} 
