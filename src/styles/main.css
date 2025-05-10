@@ -4,10 +4,17 @@ body {
     color: #ffffff;
     text-align: center;
     padding: 20px;
+    margin: 0;
   }
   
   h1 {
     margin-bottom: 30px;
+    color: #ffffff;
+  }
+  
+  .App {
+    max-width: 800px;
+    margin: 0 auto;
   }
   
   #midi-log {
