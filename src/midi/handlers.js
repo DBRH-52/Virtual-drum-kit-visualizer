@@ -1,4 +1,17 @@
-import { DRUM_MAPPING, MIDI_COMMANDS } from './constants';
+import { DRUM_MAPPING, BLACKHAWK_HXD4_PRO_MAPPING, MIDI_COMMANDS } from './constants';
+
+// Default to standard General MIDI mapping
+let currentMapping = DRUM_MAPPING;
+
+export function setMappingType(mappingType) {
+    if (mappingType === 'blackhawk') {
+        currentMapping = BLACKHAWK_HXD4_PRO_MAPPING;
+        console.log('Switched to Blackhawk HXD4 PRO mapping');
+    } else {
+        currentMapping = DRUM_MAPPING;
+        console.log('Switched to General MIDI mapping');
+    }
+}
 
 export function initializeMIDI() {
     if (navigator.requestMIDIAccess) {
@@ -48,11 +61,11 @@ function handleMIDIMessage(message) {
     
     // Check if this is a note-on message with velocity > 0 (actual drum hit, not release)
     if ((command & MIDI_COMMANDS.COMMAND_MASK) === MIDI_COMMANDS.NOTE_ON && velocity > 0) {
-        const drumElement = document.getElementById(DRUM_MAPPING[note]);
-        const drumName = DRUM_MAPPING[note] || 'unknown';
+        const drumElement = document.getElementById(currentMapping[note]);
+        const drumName = currentMapping[note] || 'unknown';
         
-        console.log(`Trying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`);
-        document.getElementById('midi-log').textContent += `\nTrying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`;
+        console.log(`Trying to highlight: Note=${note} (${drumName}), Mapped to=${currentMapping[note]}, Element found=${!!drumElement}`);
+        document.getElementById('midi-log').textContent += `\nTrying to highlight: Note=${note} (${drumName}), Mapped to=${currentMapping[note]}, Element found=${!!drumElement}`;
         
         if (drumElement) {
             // Visual feedback for the drum hit

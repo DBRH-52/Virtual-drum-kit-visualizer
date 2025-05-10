@@ -12,6 +12,20 @@ export const DRUM_MAPPING = {
     51: 'ride'     
 };
 
+// BlackHawk HXD4 PRO drum mapping
+export const BLACKHAWK_HXD4_PRO_MAPPING = {
+    36: 'kick',    
+    46: 'hihat',   
+    38: 'snare',   
+    48: 'tom1',    
+    45: 'tom2',    
+    47: 'tom3',    
+    43: 'tom4',    
+    49: 'crash1',  
+    55: 'crash2',  
+    51: 'ride'     
+};
+
 // MIDI command constants
 export const MIDI_COMMANDS = {
     NOTE_ON: 0x90,
