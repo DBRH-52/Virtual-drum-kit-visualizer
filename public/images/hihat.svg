@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hihatGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFDF00; stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DAA520; stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="40" cy="40" r="38" fill="url(#hihatGradient)" stroke="#B8860B" stroke-width="2"/>
+  <line x1="25" y1="40" x2="55" y2="40" stroke="#996600" stroke-width="2"/>
+  <text x="40" y="55" text-anchor="middle" fill="#333" font-family="Arial" font-size="10" font-weight="bold">HI-HAT</text>
+</svg> 

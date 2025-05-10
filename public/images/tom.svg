@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="90" height="90" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="drumSkin" patternUnits="userSpaceOnUse" width="10" height="10">
+      <circle cx="5" cy="5" r="1" fill="#ffffff" opacity="0.15"/>
+    </pattern>
+  </defs>
+  <circle cx="45" cy="45" r="40" fill="#C8C8C8" stroke="#AAAAAA" stroke-width="3"/>
+  <circle cx="45" cy="45" r="38" fill="url(#drumSkin)" stroke="none"/>
+  <circle cx="45" cy="45" r="32" fill="#F5F5F5" stroke="none"/>
+  <circle cx="45" cy="45" r="25" fill="#E0E0E0" stroke="none"/>
+  <text x="45" y="50" text-anchor="middle" fill="#333" font-family="Arial" font-size="12" font-weight="bold">TOM</text>
+</svg>
