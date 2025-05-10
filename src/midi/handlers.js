@@ -1,21 +1,8 @@
-// MIDI note mapping
-// (standard general MIDI drum note numbers)
-const DRUM_MAPPING = {
-    36: 'kick',    
-    46: 'hihat',   
-    38: 'snare',   
-    45: 'tom1',    
-    47: 'tom2',    
-    48: 'tom3',    
-    50: 'tom4',    
-    49: 'crash1',  
-    57: 'crash2',  
-    51: 'ride'     
-};
+import { DRUM_MAPPING, MIDI_COMMANDS } from './constants';
 
 export function initializeMIDI() {
     if (navigator.requestMIDIAccess) {
-        navigator.requestMIDIAccess().then(onMIDISuccess,onMIDIFailure);
+        navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
     }
     else {
         document.getElementById('midi-log').textContent = "Web MIDI is not supported in this browser!";
@@ -32,11 +19,13 @@ function onMIDISuccess(midiAccess) {
         input.onmidimessage = handleMIDIMessage;
     }
 }
+
 function onMIDIFailure() {
     document.getElementById('midi-log').textContent = 'Failed to connect to MIDI devices.';
 }
 
-// Handle incoming MIDI messages
+
+//(extract command, note, velocity from MIDI message)
 function handleMIDIMessage(message) {
     console.log("MIDI message received!"); 
     // (MIDI message = 3 bytes)
@@ -44,8 +33,10 @@ function handleMIDIMessage(message) {
     // (second byte - note number -- 0-127)
     // (third byte - velocity -- how hard the note is hit - 0-127)
     const [command, note, velocity] = message.data;
-    console.log("MIDI data:", command, note, velocity);  // Log the raw data
+    
+    console.log("MIDI data:", command, note, velocity);
     document.getElementById('midi-log').textContent += `\nMIDI Message: Command=${command}, Note=${note}, Velocity=${velocity}`;
+    
     // Process note-on messages
     // (153 (0x99 hex) = 144 (0x90 hex) + 9 (channel 10)) --> (153 = note-on on channel 10)
     // With velocity > 0 --> (0 - note-off msg)
@@ -53,28 +44,40 @@ function handleMIDIMessage(message) {
 
     // (0x90 = 1001 0000 in binary - first 4 bits - 1001 - note-on)
     // (0xF0 = 1111 0000 in binary - mask to check only first 4 bits)
-    if ((command & 0xF0) === 0x90 && velocity > 0) {
+    //if ((command & 0xF0) === 0x90 && velocity > 0) {
+    
+    // Check if this is a note-on message with velocity > 0 (actual drum hit, not release)
+    if ((command & MIDI_COMMANDS.COMMAND_MASK) === MIDI_COMMANDS.NOTE_ON && velocity > 0) {
         const drumElement = document.getElementById(DRUM_MAPPING[note]);
         const drumName = DRUM_MAPPING[note] || 'unknown';
+        
         console.log(`Trying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`);
         document.getElementById('midi-log').textContent += `\nTrying to highlight: Note=${note} (${drumName}), Mapped to=${DRUM_MAPPING[note]}, Element found=${!!drumElement}`;
+        
         if (drumElement) {
-            // Visual feedback
-            // Calculate the zoom scale based on velocity (0-quite | 127-loud))
-            // Scaling: 1.0 (velocity=0 - very quiet) - 1.5 (velocity=127 - very loud)
-            // 1.0 - 100% size | 1.5 - 150% size
-                // velocity / 127 -> calculate % of hit
-                // * 0.5 -> max zoom = 50%
-                // 1 + -> size - always at least 100%
+            // Visual feedback for the drum hit
+            // Calculate the zoom scale based on velocity (0-quiet | 127-loud)
+            // The harder the hit, the more the drum will scale up
             const scale = 1 + (velocity / 127) * 0.5;
-            // W/o changing the layout
+            
+            // Add hit class and set scale based on velocity -- trigger css effects for visual feedback
+            drumElement.classList.add('hit');
             drumElement.style.transform = `scale(${scale})`;
-            drumElement.style.backgroundColor = 'orange';
+            
+            // Store the original transform value to restore it
+            const originalTransform = drumElement.getAttribute('data-original-transform') || 
+                                     window.getComputedStyle(drumElement).transform;
+            
+            // Store the original transform for future ref
+            if (!drumElement.getAttribute('data-original-transform')) {
+                drumElement.setAttribute('data-original-transform', originalTransform);
+            }
 
             // Return to previous state after 100ms
+            // Create a short "hit" animation effect
             setTimeout(() => {
-                drumElement.style.transform = 'scale(1)';
-                drumElement.style.backgroundColor = '';
+                drumElement.classList.remove('hit');
+                drumElement.style.transform = '';
             }, 100);
         }
     }
