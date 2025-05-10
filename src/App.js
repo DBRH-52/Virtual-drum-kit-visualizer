@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { initializeMIDI } from './midi/index';
 import './styles/index.css';
 
@@ -31,6 +31,13 @@ function App() {
         }, 100);
     }, []); // [] - runs only once after the component mounts
 
+    const clearMidiLog = () => {
+        const midiLog = document.getElementById('midi-log');
+        if (midiLog) {
+            midiLog.textContent = "Waiting for MIDI input...";
+        }
+    };
+
     return (
         <div className="App">
             <h1>Drum Visualizer</h1>
@@ -41,7 +48,10 @@ function App() {
                     </div>
                 ))}
             </div>
-            <pre id="midi-log">Waiting for MIDI input...</pre>
+            <div className="log-container">
+                <pre id="midi-log">Waiting for MIDI input...</pre>
+                <button className="clear-log-btn" onClick={clearMidiLog}>Clear Log</button>
+            </div>
         </div>
     );
 }

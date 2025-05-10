@@ -62,22 +62,38 @@ function handleMIDIMessage(message) {
             
             // Add hit class and set scale based on velocity -- trigger css effects for visual feedback
             drumElement.classList.add('hit');
-            drumElement.style.transform = `scale(${scale})`;
             
-            // Store the original transform value to restore it
-            const originalTransform = drumElement.getAttribute('data-original-transform') || 
-                                     window.getComputedStyle(drumElement).transform;
+            //
+            const computedStyle = window.getComputedStyle(drumElement);
+            const currentTransform = computedStyle.transform;
             
-            // Store the original transform for future ref
-            if (!drumElement.getAttribute('data-original-transform')) {
-                drumElement.setAttribute('data-original-transform', originalTransform);
+            // If the transform is none or the identity matrix -> handle positioning transforms
+            if (currentTransform === 'none' || currentTransform === 'matrix(1, 0, 0, 1, 0, 0)') {
+                // Get the id to determine if it uses translateX(-50%) or translateX(50%)
+                const id = drumElement.id;
+                if (id === 'ride') {
+                    // Ride uses translateX(50%)
+                    drumElement.style.transform = `translateX(50%) scale(${scale})`;
+                } else {
+                    // All others use translateX(-50%)
+                    drumElement.style.transform = `translateX(-50%) scale(${scale})`;
+                }
+            } else {
+                // If there's already a transform matrix -> apply scale while preserving position
+                drumElement.style.transform = `${currentTransform} scale(${scale})`;
             }
 
             // Return to previous state after 100ms
             // Create a short "hit" animation effect
             setTimeout(() => {
                 drumElement.classList.remove('hit');
-                drumElement.style.transform = '';
+                // Restore the original transform based on ID
+                const id = drumElement.id;
+                if (id === 'ride') {
+                    drumElement.style.transform = 'translateX(50%)';
+                } else {
+                    drumElement.style.transform = 'translateX(-50%)';
+                }
             }, 100);
         }
     }
