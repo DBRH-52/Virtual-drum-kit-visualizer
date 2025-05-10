@@ -1,0 +1,40 @@
+.drum {
+    background-color: #333;
+    border: 2px solid #555;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    font-size: 14px;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.1s ease, transform 0.1s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    position: absolute; 
+  }
+  
+  .drum:active,
+  .drum.hit {
+    background-color: red !important;
+    transform: scale(1.1);
+  }
+  
+  /* Sizes for different drum types */
+  #kick {
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
+  }
+  
+  #snare, #tom1, #tom2, #tom3, #tom4 {
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+  }
+  
+  #hihat, #crash1, #crash2, #ride {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+  }

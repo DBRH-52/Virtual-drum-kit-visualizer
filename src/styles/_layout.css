@@ -1,0 +1,67 @@
+#drum-container {
+    position: relative;
+    height: 500px;
+    margin: 0 auto 30px;
+    width: 700px;
+  }
+  
+  /* Position each drum individually (to mimic a real drum set) */
+  #kick {
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  #snare {
+    bottom: 150px;
+    left: 38%;
+    transform: translateX(-50%);
+  }
+  
+  #hihat {
+    bottom: 200px;
+    left: 25%;
+    transform: translateX(-50%);
+  }
+  
+  #tom1 {
+    top: 150px;
+    left: 40%;
+    transform: translateX(-50%);
+  }
+  
+  #tom2 {
+    top: 150px;
+    left: 54%;
+    transform: translateX(-50%);
+  }
+  
+  #tom3 {
+    bottom: 190px;
+    left: 65%;
+    transform: translateX(-50%);
+  }
+  
+  #tom4 {
+    bottom: 120px;
+    left: 75%;
+    transform: translateX(-50%);
+  }
+  
+  #crash1 {
+    top: 120px;
+    left: 25%;
+    transform: translateX(-50%);
+  }
+  
+  #crash2 {
+    top: 120px;
+    left: 68%;
+    transform: translateX(-50%);
+  }
+  
+  #ride {
+    top: 190px;
+    right: 20%;
+    transform: translateX(50%);
+  }

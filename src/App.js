@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import {initializeMIDI} from './midi';
-//import './App.css';
-import './style.css';
+import React, { useEffect } from 'react';
+import { initializeMIDI } from './midi';
+import './styles/index.css';
 
 const DRUMS = [
     'kick',
