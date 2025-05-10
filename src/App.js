@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { initializeMIDI } from './midi/index';
+import { initializeMIDI, setMappingType } from './midi/index';
 import './styles/index.css';
 
 // Import SVG files
@@ -25,6 +25,8 @@ const DRUMS = [
 ];
 
 function App() {
+    const [mappingType, setMapping] = useState('general');
+
     useEffect(() => {
         setTimeout(() => {
             initializeMIDI();
@@ -38,9 +40,32 @@ function App() {
         }
     };
 
+    const handleMappingChange = (event) => {
+        const newMapping = event.target.value;
+        setMapping(newMapping);
+        setMappingType(newMapping === 'blackhawk' ? 'blackhawk' : 'general');
+        
+        // Log the mapping change
+        const midiLog = document.getElementById('midi-log');
+        if (midiLog) {
+            midiLog.textContent += `\nSwitched to ${newMapping === 'blackhawk' ? 'BlackHawk HXD4 PRO' : 'General MIDI'} mapping`;
+        }
+    };
+
     return (
         <div className="App">
             <h1>Drum Visualizer</h1>
+            <div className="mapping-selector">
+                <label htmlFor="mapping-select">MIDI Mapping: </label>
+                <select 
+                    id="mapping-select" 
+                    value={mappingType} 
+                    onChange={handleMappingChange}
+                >
+                    <option value="general">General MIDI</option>
+                    <option value="blackhawk">BlackHawk HXD4 PRO</option>
+                </select>
+            </div>
             <div id="drum-container">
                 {DRUMS.map((drum) => (
                     <div key={drum.id} className="drum" id={drum.id}>
